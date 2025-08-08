@@ -77,7 +77,7 @@ end)
 RunService.RenderStepped:Connect(function()
     -- Update FOV circle
     FOVCircle.Visible = camlock.settings.ShowFOV
-    FOVCircle.Position = Vector2.new(Mouse.X, Mouse.Y)
+    FOVCircle.Position = Vector2.new(math.floor(Mouse.X), math.floor(Mouse.Y))
     FOVCircle.Radius = camlock.settings.FOV
     FOVCircle.Color = camlock.settings.FOVColor
 
