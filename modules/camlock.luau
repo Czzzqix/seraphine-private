@@ -84,19 +84,19 @@ RunService.RenderStepped:Connect(function()
     local outlineOpacity = camlock.settings.FOVOpacity
     local fillOpacity = math.max(0, outlineOpacity - 0.2)
     
-    -- Fill circle
-    FOVCircleFill.Visible = showFOV and camlock.settings.FOVFilled
-    FOVCircleFill.Position = mousePos
-    FOVCircleFill.Radius = camlock.settings.FOV
-    FOVCircleFill.Color = camlock.settings.FOVColor
-    FOVCircleFill.Transparency = 1 - fillOpacity
-    
-    -- Outline circle
+    -- Outline circle (draw first, behind fill)
     FOVCircleOutline.Visible = showFOV and camlock.settings.FOVOutline
     FOVCircleOutline.Position = mousePos
     FOVCircleOutline.Radius = camlock.settings.FOV
     FOVCircleOutline.Color = camlock.settings.FOVColor
     FOVCircleOutline.Transparency = 1 - outlineOpacity
+    
+    -- Fill circle (draw second, on top)
+    FOVCircleFill.Visible = showFOV and camlock.settings.FOVFilled
+    FOVCircleFill.Position = mousePos
+    FOVCircleFill.Radius = camlock.settings.FOV
+    FOVCircleFill.Color = camlock.settings.FOVColor
+    FOVCircleFill.Transparency = 1 - fillOpacity
     
     if not camlock.settings.Enabled then return end
     local active = (camlock.settings.Mode == "Hold" and Holding) or (camlock.settings.Mode == "Toggle" and ToggleState)
