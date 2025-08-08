@@ -11,6 +11,6 @@ seraphine.camlock.settings.FOV = 150 -- FOV circle radius
 seraphine.camlock.settings.ShowFOV = true -- master FOV toggle
 seraphine.camlock.settings.FOVColor = Color3.fromRGB(0, 255, 0) -- FOV circle color
 seraphine.camlock.settings.FOVFilled = true -- show fill circle
-seraphine.camlock.settings.FOVOutline = false -- hide outline (just filled)
+seraphine.camlock.settings.FOVOutline = true -- hide outline (just filled)
 seraphine.camlock.settings.FOVOpacity = 0.8 -- 80% opacity (outline = this, fill = this - 0.2)
 --==========================================
