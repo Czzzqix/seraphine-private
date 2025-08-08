@@ -9,7 +9,10 @@ camlock.settings = {
     Smoothness = 0.15,
     Prediction = 0.12,
     TargetPart = "Head",
-    ShowFOV = false, -- FOV circle visibility
+    ShowFOV = false, -- FOV circle visibility (master toggle)
+    FOVFilled = true, -- FOV fill circle
+    FOVOutline = true, -- FOV outline circle
+    FOVOpacity = 1, -- Base opacity for FOV circles
     FOVColor = Color3.fromRGB(255, 0, 0)
 }
 -- Internal
@@ -23,11 +26,17 @@ local LockedTarget = nil
 local Holding = false
 local ToggleState = false
 -- FOV Drawing
-local FOVCircle = Drawing.new("Circle")
-FOVCircle.Thickness = 1
-FOVCircle.NumSides = 50
-FOVCircle.Filled = false
-FOVCircle.Visible = false -- start hidden
+local FOVCircleFill = Drawing.new("Circle")
+FOVCircleFill.Thickness = 1
+FOVCircleFill.NumSides = 50
+FOVCircleFill.Filled = true
+FOVCircleFill.Visible = false
+
+local FOVCircleOutline = Drawing.new("Circle")
+FOVCircleOutline.Thickness = 2
+FOVCircleOutline.NumSides = 50
+FOVCircleOutline.Filled = false
+FOVCircleOutline.Visible = false
 -- Get Closest Player
 local function GetClosestPlayer()
     local closest, distance = nil, camlock.settings.FOV
@@ -69,11 +78,26 @@ UserInputService.InputEnded:Connect(function(input)
 end)
 -- Main Loop
 RunService.RenderStepped:Connect(function()
-    -- Update FOV circle
-    FOVCircle.Visible = camlock.settings.ShowFOV
-    FOVCircle.Position = UserInputService:GetMouseLocation()
-    FOVCircle.Radius = camlock.settings.FOV
-    FOVCircle.Color = camlock.settings.FOVColor
+    -- Update FOV circles
+    local mousePos = UserInputService:GetMouseLocation()
+    local showFOV = camlock.settings.ShowFOV
+    local outlineOpacity = camlock.settings.FOVOpacity
+    local fillOpacity = math.max(0, outlineOpacity - 0.2)
+    
+    -- Fill circle
+    FOVCircleFill.Visible = showFOV and camlock.settings.FOVFilled
+    FOVCircleFill.Position = mousePos
+    FOVCircleFill.Radius = camlock.settings.FOV
+    FOVCircleFill.Color = camlock.settings.FOVColor
+    FOVCircleFill.Transparency = 1 - fillOpacity
+    
+    -- Outline circle
+    FOVCircleOutline.Visible = showFOV and camlock.settings.FOVOutline
+    FOVCircleOutline.Position = mousePos
+    FOVCircleOutline.Radius = camlock.settings.FOV
+    FOVCircleOutline.Color = camlock.settings.FOVColor
+    FOVCircleOutline.Transparency = 1 - outlineOpacity
+    
     if not camlock.settings.Enabled then return end
     local active = (camlock.settings.Mode == "Hold" and Holding) or (camlock.settings.Mode == "Toggle" and ToggleState)
     if active and LockedTarget and LockedTarget.Character and LockedTarget.Character:FindFirstChild(camlock.settings.TargetPart) then
