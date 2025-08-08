@@ -82,21 +82,21 @@ RunService.RenderStepped:Connect(function()
     local mousePos = UserInputService:GetMouseLocation()
     local showFOV = camlock.settings.ShowFOV
     local outlineOpacity = camlock.settings.FOVOpacity
-    local fillOpacity = math.max(0, outlineOpacity - 0.2)
+    local fillOpacity = math.min(1, outlineOpacity + 0.2)  -- fill should be more transparent
     
-    -- Outline circle (draw first, behind fill)
+    -- Outline circle (draw first, slightly larger)
     FOVCircleOutline.Visible = showFOV and camlock.settings.FOVOutline
     FOVCircleOutline.Position = mousePos
-    FOVCircleOutline.Radius = camlock.settings.FOV
+    FOVCircleOutline.Radius = camlock.settings.FOV  -- back to normal size
     FOVCircleOutline.Color = camlock.settings.FOVColor
-    FOVCircleOutline.Transparency = 1 - outlineOpacity
+    FOVCircleOutline.Transparency = 1 - outlineOpacity  -- more opaque
     
-    -- Fill circle (draw second, on top)
+    -- Fill circle (draw second, normal size)
     FOVCircleFill.Visible = showFOV and camlock.settings.FOVFilled
     FOVCircleFill.Position = mousePos
     FOVCircleFill.Radius = camlock.settings.FOV
     FOVCircleFill.Color = camlock.settings.FOVColor
-    FOVCircleFill.Transparency = 1 - fillOpacity
+    FOVCircleFill.Transparency = 1 - fillOpacity  -- more transparent than outline
     
     if not camlock.settings.Enabled then return end
     local active = (camlock.settings.Mode == "Hold" and Holding) or (camlock.settings.Mode == "Toggle" and ToggleState)
