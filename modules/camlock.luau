@@ -13,7 +13,9 @@ camlock.settings = {
     FOVFilled = true, -- show fill circle
     FOVOutline = true, -- show outline circle
     FOVOpacity = 1, -- base opacity (outline = this, fill = this - 0.2)
-    FOVColor = Color3.fromRGB(255, 0, 0) -- FOV circle color
+    FOVColor = Color3.fromRGB(255, 0, 0), -- FOV circle color
+    FOVSides = 50, -- number of sides for FOV circle
+    FOVThickness = 2 -- thickness of FOV outline
 }
 -- Internal
 local Players = cloneref(game:GetService("Players"))
