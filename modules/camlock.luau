@@ -33,11 +33,18 @@ FOVCircleFill.NumSides = 4000
 FOVCircleFill.Filled = true
 FOVCircleFill.Visible = false
 
-local FOVCircleOutline = Drawing.new("Circle")
-FOVCircleOutline.Thickness = 2
-FOVCircleOutline.NumSides = 4000
-FOVCircleOutline.Filled = false
-FOVCircleOutline.Visible = false
+-- Multiple outline circles for thickness simulation
+local FOVOutlineCircles = {}
+local MAX_THICKNESS = 20 -- maximum supported thickness
+
+for i = 1, MAX_THICKNESS do
+    local circle = Drawing.new("Circle")
+    circle.Thickness = 1
+    circle.NumSides = 4000
+    circle.Filled = false
+    circle.Visible = false
+    FOVOutlineCircles[i] = circle
+end
 -- Get Closest Player
 local function GetClosestPlayer()
     local closest, distance = nil, camlock.settings.FOV
