@@ -3,17 +3,17 @@ local camlock = {}
 -- Default Settings (everything OFF)
 camlock.settings = {
     Enabled = false, -- master switch
-    Keybind = Enum.UserInputType.MouseButton2, -- default hold RMB
+    Keybind = Enum.UserInputType.MouseButton2, -- camlock keybind
     Mode = "Hold", -- "Hold" or "Toggle"
-    FOV = 100,
-    Smoothness = 0.15,
-    Prediction = 0.12,
-    TargetPart = "Head",
+    FOV = 100, -- FOV circle radius
+    Smoothness = 0.15, -- camera smoothing
+    Prediction = 0.12, -- velocity prediction
+    TargetPart = "Head", -- body part to target
     ShowFOV = false, -- FOV circle visibility (master toggle)
-    FOVFilled = true, -- FOV fill circle
-    FOVOutline = true, -- FOV outline circle
-    FOVOpacity = 1, -- Base opacity for FOV circles
-    FOVColor = Color3.fromRGB(255, 0, 0)
+    FOVFilled = true, -- show fill circle
+    FOVOutline = true, -- show outline circle
+    FOVOpacity = 1, -- base opacity (outline = this, fill = this - 0.2)
+    FOVColor = Color3.fromRGB(255, 0, 0) -- FOV circle color
 }
 -- Internal
 local Players = cloneref(game:GetService("Players"))
