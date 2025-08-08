@@ -14,7 +14,6 @@ camlock.settings = {
     FOVOutline = true, -- show outline circle
     FOVOpacity = 1, -- base opacity (outline = this, fill = this - 0.2)
     FOVColor = Color3.fromRGB(255, 0, 0), -- FOV circle color
-    FOVSides = 50, -- number of sides for FOV circle
     FOVThickness = 2 -- thickness of FOV outline
 }
 -- Internal
@@ -30,13 +29,13 @@ local ToggleState = false
 -- FOV Drawing
 local FOVCircleFill = Drawing.new("Circle")
 FOVCircleFill.Thickness = 1
-FOVCircleFill.NumSides = 50
+FOVCircleFill.NumSides = 4000
 FOVCircleFill.Filled = true
 FOVCircleFill.Visible = false
 
 local FOVCircleOutline = Drawing.new("Circle")
 FOVCircleOutline.Thickness = 2
-FOVCircleOutline.NumSides = 50
+FOVCircleOutline.NumSides = 4000
 FOVCircleOutline.Filled = false
 FOVCircleOutline.Visible = false
 -- Get Closest Player
