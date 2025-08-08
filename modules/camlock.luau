@@ -14,7 +14,7 @@ camlock.settings = {
     FOVOutline = true, -- show outline circle
     FOVOpacity = 1, -- base opacity (outline = this, fill = this - 0.2)
     FOVColor = Color3.fromRGB(255, 0, 0), -- FOV circle color
-    FOVThickness = 2 -- thickness of FOV outline
+    FOVThickness = 2 -- thickness of FOV outline (number of concentric circles)
 }
 -- Internal
 local Players = cloneref(game:GetService("Players"))
@@ -26,6 +26,7 @@ local Mouse = LocalPlayer:GetMouse()
 local LockedTarget = nil
 local Holding = false
 local ToggleState = false
+
 -- FOV Drawing
 local FOVCircleFill = Drawing.new("Circle")
 FOVCircleFill.Thickness = 1
@@ -45,6 +46,7 @@ for i = 1, MAX_THICKNESS do
     circle.Visible = false
     FOVOutlineCircles[i] = circle
 end
+
 -- Get Closest Player
 local function GetClosestPlayer()
     local closest, distance = nil, camlock.settings.FOV
@@ -64,6 +66,7 @@ local function GetClosestPlayer()
     end
     return closest
 end
+
 -- Input Handling
 UserInputService.InputBegan:Connect(function(input)
     if not camlock.settings.Enabled then return end
@@ -77,6 +80,7 @@ UserInputService.InputBegan:Connect(function(input)
         end
     end
 end)
+
 UserInputService.InputEnded:Connect(function(input)
     if not camlock.settings.Enabled then return end
     if camlock.settings.Mode == "Hold" and input.UserInputType == camlock.settings.Keybind then
@@ -84,28 +88,35 @@ UserInputService.InputEnded:Connect(function(input)
         LockedTarget = nil
     end
 end)
+
 -- Main Loop
 RunService.RenderStepped:Connect(function()
-    -- Update FOV circles
     local mousePos = UserInputService:GetMouseLocation()
     local showFOV = camlock.settings.ShowFOV
     local outlineOpacity = camlock.settings.FOVOpacity
     local fillOpacity = math.min(1, outlineOpacity + 0.2)  -- fill should be more transparent
-    
-    -- Outline circle (draw first, slightly larger)
-    FOVCircleOutline.Visible = showFOV and camlock.settings.FOVOutline
-    FOVCircleOutline.Position = mousePos
-    FOVCircleOutline.Radius = camlock.settings.FOV  -- back to normal size
-    FOVCircleOutline.Color = camlock.settings.FOVColor
-    FOVCircleOutline.Transparency = 1 - outlineOpacity  -- more opaque
-    
+
+    -- Draw multiple outline circles for thickness effect
+    for i = 1, MAX_THICKNESS do
+        local circle = FOVOutlineCircles[i]
+        if i <= camlock.settings.FOVThickness and showFOV and camlock.settings.FOVOutline then
+            circle.Visible = true
+            circle.Position = mousePos
+            circle.Radius = camlock.settings.FOV + (i - 1) -- slightly bigger radius for each circle
+            circle.Color = camlock.settings.FOVColor
+            circle.Transparency = 1 - outlineOpacity
+        else
+            circle.Visible = false
+        end
+    end
+
     -- Fill circle (draw second, normal size)
     FOVCircleFill.Visible = showFOV and camlock.settings.FOVFilled
     FOVCircleFill.Position = mousePos
     FOVCircleFill.Radius = camlock.settings.FOV
     FOVCircleFill.Color = camlock.settings.FOVColor
-    FOVCircleFill.Transparency = 1 - fillOpacity  -- more transparent than outline
-    
+    FOVCircleFill.Transparency = 1 - fillOpacity
+
     if not camlock.settings.Enabled then return end
     local active = (camlock.settings.Mode == "Hold" and Holding) or (camlock.settings.Mode == "Toggle" and ToggleState)
     if active and LockedTarget and LockedTarget.Character and LockedTarget.Character:FindFirstChild(camlock.settings.TargetPart) then
@@ -115,4 +126,5 @@ RunService.RenderStepped:Connect(function()
         Camera.CFrame = Camera.CFrame:Lerp(newCF, camlock.settings.Smoothness)
     end
 end)
+
 return camlock
